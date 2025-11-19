@@ -78,21 +78,22 @@
 
   <script>
     async function loadProjects() {
-      const api = "projects.json"; // Zet hier je API-bestand neer
+      const api = "https://api.github.com/users/mnsmi/repos";
       try {
         const res = await fetch(api);
         const data = await res.json();
         const container = document.getElementById("projecten");
         container.innerHTML = "";
 
-        data.forEach(p => {
+        data.filter(p => !p.fork).forEach(p => {
           const el = document.createElement("div");
           el.className = "card";
           el.innerHTML = `
             <h2>${p.name}</h2>
-            <p>${p.description}</p>
-            <a class="btn" href="${p.link}" target="_blank">Bekijk</a>
+            <p>${p.description || "Geen beschrijving"}</p>
           `;
+          el.onclick = () => window.open(p.html_url, '_blank');
+          el.style.cursor = "pointer";
           container.appendChild(el);
         });
       } catch (err) {
