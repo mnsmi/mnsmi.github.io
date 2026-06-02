@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 375 375'%3E%3Cpath fill='%230181ca' fill-rule='evenodd' d='m21.98 375.063 342.258-9.477L344.09.027l-333.332 37.5ZM62.523 78.125s2.418 149.871-8.132 221.992h65.035s20.324-98.004 45.734-98.004-6.097 98.004-6.097 98.004h56.906s24.39-98.84 44.715-98.84c20.32 0-5.079 98.84-5.079 98.84h60.973S340 76.648 273.902 76.648c-39.636 0-58.96 33.66-58.96 63.707h-4.044s3.09-65.375-35.566-65.375c-38.652 0-53.86 57.86-53.86 82.903v27.535h-8.132V78.125Z'%3E%3C/path%3E%3C/svg%3E">
+    <script>
+
+    const expiry =
+    localStorage.getItem("sessionExpiry");
+    
+    if(
+    !expiry ||
+    Date.now() > parseInt(expiry)
+    ){
+    window.location.href="login.html";
+    }
+    
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Ubuntu');
 
@@ -203,6 +216,9 @@
                     <a href="https://google.ai" target="_blank" class="vip-link" title="Gmail">
                         <svg xmlns="http://www.w3.org/2000/svg" width="21" viewBox="0 0 65 65"><path d="M32.447 0c.68 0 1.273.465 1.439 1.125a39 39 0 0 0 1.999 5.905q3.23 7.5 8.854 13.125 5.626 5.626 13.125 8.855a39 39 0 0 0 5.906 1.999c.66.166 1.124.758 1.124 1.438s-.464 1.273-1.125 1.439a39 39 0 0 0-5.905 1.999q-7.5 3.23-13.125 8.854-5.625 5.626-8.854 13.125a39 39 0 0 0-2 5.906 1.485 1.485 0 0 1-1.438 1.124c-.68 0-1.272-.464-1.438-1.125a39 39 0 0 0-2-5.905q-3.227-7.5-8.854-13.125-5.625-5.625-13.125-8.854a39 39 0 0 0-5.905-2A1.485 1.485 0 0 1 0 32.448c0-.68.465-1.272 1.125-1.438a39 39 0 0 0 5.905-2q7.5-3.228 13.125-8.854 5.626-5.624 8.855-13.125a39 39 0 0 0 1.999-5.905A1.485 1.485 0 0 1 32.447 0" fill="#fff"/></svg>
                     </a>
+                    <a href="#" class="vip-link" title="Uitloggen" onclick="logout()">
+                        <svg fill="#fff" xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 52 52" xml:space="preserve"><path d="M21 48.5v-3c0-.8-.7-1.5-1.5-1.5h-10c-.8 0-1.5-.7-1.5-1.5v-33C8 8.7 8.7 8 9.5 8h10c.8 0 1.5-.7 1.5-1.5v-3c0-.8-.7-1.5-1.5-1.5H6C3.8 2 2 3.8 2 6v40c0 2.2 1.8 4 4 4h13.5c.8 0 1.5-.7 1.5-1.5"/><path d="M49.6 27c.6-.6.6-1.5 0-2.1L36.1 11.4c-.6-.6-1.5-.6-2.1 0l-2.1 2.1c-.6.6-.6 1.5 0 2.1l5.6 5.6c.6.6.2 1.7-.7 1.7H15.5c-.8 0-1.5.6-1.5 1.4v3c0 .8.7 1.6 1.5 1.6h21.2c.9 0 1.3 1.1.7 1.7l-5.6 5.6c-.6.6-.6 1.5 0 2.1l2.1 2.1c.6.6 1.5.6 2.1 0z"/></svg>
+                    </a>    
                 </div>
             </div>
         </div>
