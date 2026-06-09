@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script>
+const expiry = localStorage.getItem("enterprise_session");
+
+if (!expiry || Date.now() > Number(expiry)) {
+    localStorage.removeItem("enterprise_session");
+    window.location.href = "login";
+}
+</script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 375 375'%3E%3Cpath fill='%230181ca' fill-rule='evenodd' d='m21.98 375.063 342.258-9.477L344.09.027l-333.332 37.5ZM62.523 78.125s2.418 149.871-8.132 221.992h65.035s20.324-98.004 45.734-98.004-6.097 98.004-6.097 98.004h56.906s24.39-98.84 44.715-98.84c20.32 0-5.079 98.84-5.079 98.84h60.973S340 76.648 273.902 76.648c-39.636 0-58.96 33.66-58.96 63.707h-4.044s3.09-65.375-35.566-65.375c-38.652 0-53.86 57.86-53.86 82.903v27.535h-8.132V78.125Z'%3E%3C/path%3E%3C/svg%3E">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu');
+
+        :root {
+            --bg: #0a0a0a;
+            --card: #111113;
+            --border: #222226;
+            --accent: #3b82f6;
+            --text: #e4e4e7;
+            --muted: #a1a1aa;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        
+        body {
+            font-family: 'Ubuntu', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            max-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 1480px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Header */
+        header {
+            border-bottom: 1px solid var(--border);
+            background: rgba(10, 10, 10, 0.97);
+            backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        h1 {
+            font-family: 'Ubuntu', Arial, system-ui, sans-serif;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+        }
+
+        /* VIP Links */
+        .vip-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .vip-link {
+            width: 42px;
+            height: 42px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .vip-link:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        /* Search */
+        .search-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 50px 0 60px 0;
+        }
+
+        .search-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            width: 460px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:hover,
+        .search-box:focus-within {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .search-box input {
+            font-family: 'Ubuntu';
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 16.5px;
+            width: 100%;
+            margin-left: 12px;
+        }
+
+        /* Categories */
+        .category {
+            margin-bottom: 55px;
+        }
+
+        .category-title {
+            font-size: 17px;
+            color: var(--muted);
+            margin-bottom: 18px;
+            padding-left: 6px;
+            font-weight: 500;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
+            gap: 16px;
+        }
+
+        .link-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px 16px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.35s ease;
+        }
+
+        .link-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .link-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
+
+        .link-text {
+            font-size: 14.2px;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            color: #52525b;
+            font-size: 13px;
+            margin-top: 40px;
+        }
+
+        .logout-btn{
+    width:42px;
+    height:42px;
+    background:#111113;
+    border:1px solid #222226;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .3s ease;
+    cursor:pointer;
+}
+
+.logout-btn:hover{
+    transform:translateY(-4px);
+    border-color:#ef4444;
+    background:#1a1a1d;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 375 375"><path fill="#0181ca" fill-rule="evenodd" d="m21.98 375.063 342.258-9.477L344.09.027l-333.332 37.5ZM62.523 78.125s2.418 149.871-8.132 221.992h65.035s20.324-98.004 45.734-98.004-6.097 98.004-6.097 98.004h56.906s24.39-98.84 44.715-98.84c20.32 0-5.079 98.84-5.079 98.84h60.973S340 76.648 273.902 76.648c-39.636 0-58.96 33.66-58.96 63.707h-4.044s3.09-65.375-35.566-65.375c-38.652 0-53.86 57.86-53.86 82.903v27.535h-8.132V78.125Z"/></svg>
+                    <h1>Dashboard</h1>
+                </div>
+
+                <div class="vip-links">
+                    <a href="https://github.com" target="_blank" class="vip-link" title="GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 1024 1024" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" transform="scale(64)" fill="#fff"/></svg>
+                    </a>
+                    <a href="https://chatgpt.com" target="_blank" class="vip-link" title="ChatGPT">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="20px"><path fill="white" d="M297.06 130.97a79.7 79.7 0 0 0-6.85-65.48c-17.46-30.4-52.56-46.04-86.84-38.68A79.75 79.75 0 0 0 143.24 0C108.2-.08 77.11 22.48 66.33 55.82a79.75 79.75 0 0 0-53.31 38.67c-17.59 30.32-13.58 68.54 9.92 94.54a79.7 79.7 0 0 0 6.85 65.48c17.46 30.4 52.56 46.04 86.84 38.68a79.7 79.7 0 0 0 60.13 26.8c35.06.09 66.16-22.49 76.94-55.86a79.75 79.75 0 0 0 53.31-38.67c17.57-30.32 13.55-68.51-9.94-94.51zM176.78 299.08a59.77 59.77 0 0 1-38.39-13.88c.49-.26 1.34-.73 1.89-1.07l63.72-36.8a10.36 10.36 0 0 0 5.24-9.07v-89.83l26.93 15.55c.29.14.48.42.52.74v74.39c-.04 33.08-26.83 59.9-59.91 59.97M47.94 244.05a59.7 59.7 0 0 1-7.15-40.18c.47.28 1.3.79 1.89 1.13l63.72 36.8c3.23 1.89 7.23 1.89 10.47 0l77.79-44.92v31.1c.02.32-.13.63-.38.83L129.87 266c-28.69 16.52-65.33 6.7-81.92-21.95zM31.17 104.96c7-12.16 18.05-21.46 31.21-26.29 0 .55-.03 1.52-.03 2.2v73.61c-.02 3.74 1.98 7.21 5.23 9.06l77.79 44.91L118.44 224c-.27.18-.61.21-.91.08l-64.42-37.22c-28.63-16.58-38.45-53.21-21.95-81.89zm221.26 51.49-77.79-44.92 26.93-15.54c.27-.18.61-.21.91-.08l64.42 37.19c28.68 16.57 38.51 53.26 21.94 81.94a59.94 59.94 0 0 1-31.2 26.28v-75.81c.03-3.74-1.96-7.2-5.2-9.06zm26.8-40.34c-.47-.29-1.3-.79-1.89-1.13l-63.72-36.8a10.38 10.38 0 0 0-10.47 0l-77.79 44.92V92c-.02-.32.13-.63.38-.83l64.41-37.16c28.69-16.55 65.37-6.7 81.91 22a59.95 59.95 0 0 1 7.15 40.1zm-168.51 55.43-26.94-15.55a.94.94 0 0 1-.52-.74V80.86c.02-33.12 26.89-59.96 60.01-59.94 14.01 0 27.57 4.92 38.34 13.88-.49.26-1.33.73-1.89 1.07L116 72.67a10.34 10.34 0 0 0-5.24 9.06l-.04 89.79zM125.35 140 160 119.99l34.65 20V180L160 200l-34.65-20z"/></svg>
+                    </a>
+                    <a href="https://grok.com" target="_blank" class="vip-link" title="Grok AI">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 0 512 509.641"><path fill="#fff" d="m213.235 306.019 178.976-180.002v.169l51.695-51.763c-.924 1.32-1.86 2.605-2.785 3.89-39.281 54.164-58.46 80.649-43.07 146.922l-.09-.101c10.61 45.11-.744 95.137-37.398 131.836-46.216 46.306-120.167 56.611-181.063 14.928l42.462-19.675c38.863 15.278 81.392 8.57 111.947-22.03 30.566-30.6 37.432-75.159 22.065-112.252-2.92-7.025-11.67-8.795-17.792-4.263zm-25.786 22.437-.033.034L68.094 435.217c7.565-10.429 16.957-20.294 26.327-30.149 26.428-27.803 52.653-55.359 36.654-94.302-21.422-52.112-8.952-113.177 30.724-152.898 41.243-41.254 101.98-51.661 152.706-30.758 11.23 4.172 21.016 10.114 28.638 15.639l-42.359 19.584c-39.44-16.563-84.629-5.299-112.207 22.313-37.298 37.308-44.84 102.003-1.128 143.81"/></svg>
+                    </a>
+                    <a href="https://google.ai" target="_blank" class="vip-link" title="Gmail">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="21" viewBox="0 0 65 65"><path d="M32.447 0c.68 0 1.273.465 1.439 1.125a39 39 0 0 0 1.999 5.905q3.23 7.5 8.854 13.125 5.626 5.626 13.125 8.855a39 39 0 0 0 5.906 1.999c.66.166 1.124.758 1.124 1.438s-.464 1.273-1.125 1.439a39 39 0 0 0-5.905 1.999q-7.5 3.23-13.125 8.854-5.625 5.626-8.854 13.125a39 39 0 0 0-2 5.906 1.485 1.485 0 0 1-1.438 1.124c-.68 0-1.272-.464-1.438-1.125a39 39 0 0 0-2-5.905q-3.227-7.5-8.854-13.125-5.625-5.625-13.125-8.854a39 39 0 0 0-5.905-2A1.485 1.485 0 0 1 0 32.448c0-.68.465-1.272 1.125-1.438a39 39 0 0 0 5.905-2q7.5-3.228 13.125-8.854 5.626-5.624 8.855-13.125a39 39 0 0 0 1.999-5.905A1.485 1.485 0 0 1 32.447 0" fill="#fff"/></svg>
+                    </a>
+                    <div class="logout-btn" title="Uitloggen" onclick="logout()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" viewBox="0 0 24 24">
+                            <path d="M16 17v-3h-7v-4h7V7l5 5-5 5zm-2 4H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9v2H5v14h9v2z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <form action="https://www.google.com/search" method="GET" class="search-box">
+                <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 24 24" width="24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09" fill="#fff"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23" fill="#fff"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22z" fill="#fff"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53" fill="#fff"/></svg>
+                <input type="text" name="q" placeholder="Zoeken met Google" autocomplete="off">
+            </form>
+
+            <form action="https://www.youtube.com/results" method="GET" class="search-box">
+                <svg width="34" height="17" viewBox="0 0 100 216.023" xmlns="http://www.w3.org/2000/svg"><path style="fill:#fff;stroke-width:.0208149" d="M4.436 0s-97.898-.015-122.128 6.575c-13.486 3.564-24.009 13.945-27.847 27.337-6.469 23.763-6.47 73.871-6.47 73.871s.001 50.438 6.47 74.416c3.837 13.07 14.361 23.665 27.847 27.337 24.23 6.48 122.128 6.487 122.128 6.487s98.124-.006 122.463-6.487c13.705-3.672 24.018-14.25 27.635-27.32 6.69-23.977 6.68-74.433 6.68-74.433s.01-50.108-6.68-73.871c-3.617-13.393-13.93-23.773-27.635-27.337C102.559-.015 4.436 0 4.436 0m-32.241 62.48 81.008 45.9-81.008 45.902zM5023.808 0s-97.898-.015-122.128 6.575c-13.486 3.564-24.009 13.945-27.847 27.337-6.469 23.763-6.47 73.871-6.47 73.871s.001 50.438 6.47 74.416c3.837 13.07 14.36 23.665 27.847 27.337 24.23 6.48 122.128 6.487 122.128 6.487s98.123-.006 122.462-6.487c13.705-3.672 24.019-14.25 27.636-27.32 6.689-23.977 6.68-74.433 6.68-74.433s.01-50.108-6.68-73.871c-3.617-13.393-13.93-23.773-27.636-27.337C5121.93-.015 5023.808 0 5023.808 0m-32.242 62.48 81.009 45.9-81.009 45.902z"/></svg>
+                <input type="text" name="search_query" placeholder="Zoeken met YouTube" autocomplete="off">
+            </form>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">Algemeen</h2>
+            <div class="links-grid">
+
+                <a href="https://google.com" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Google_Favicon_2025.svg" width="32" alt=""></div>
+                    <div class="link-text">Google</div>
+                </a>
+
+                <a href="https://youtu.be" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" width="32" alt=""></div>
+                    <div class="link-text">YouTube</div>
+                </a>
+
+                <a href="https://canva.com" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><svg viewBox="0 0 508 508" xmlns="http://www.w3.org/2000/svg" width="32" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><g transform="scale(.26718)"><circle cx="950" cy="950" r="950" fill="#7d2ae7"/><circle cx="950" cy="950" r="950" fill="url(#a)"/><circle cx="950" cy="950" r="950" fill="url(#b)"/><circle cx="950" cy="950" r="950" fill="url(#c)"/><circle cx="950" cy="950" r="950" fill="url(#d)"/></g><path d="M446.744 276.845c-.665 0-1.271.43-1.584 1.33-4.011 11.446-9.43 18.254-13.891 18.254-2.563 0-3.6-2.856-3.6-7.336 0-11.21 6.71-34.982 10.095-45.82.392-1.312.646-2.485.646-3.483 0-3.15-1.722-4.696-5.987-4.696-4.598 0-9.547 1.8-14.36 10.233-1.663-7.435-6.691-10.683-13.715-10.683-8.12 0-15.965 5.224-22.421 13.696s-14.048 11.25-19.76 9.88c4.108-10.057 5.634-17.57 5.634-23.145 0-8.746-4.324-14.028-11.308-14.028-10.624 0-16.747 10.134-16.747 20.797 0 8.237 3.736 16.708 11.954 20.817-6.887 15.573-16.943 29.66-20.758 29.66-4.93 0-6.379-24.123-6.105-41.38.176-9.9.998-10.408.998-13.401 0-1.722-1.115-2.896-5.595-2.896-10.448 0-13.676 8.844-14.165 18.998a50 50 0 0 1-1.8 11.406c-4.363 15.573-13.363 27.39-19.232 27.39-2.72 0-3.463-2.72-3.463-6.28 0-11.21 6.28-25.219 6.28-37.173 0-8.784-3.854-14.34-11.112-14.34-8.55 0-19.858 10.173-30.56 29.229 3.521-14.595 4.97-28.721-5.459-28.721a14.1 14.1 0 0 0-6.476 1.683 3.69 3.69 0 0 0-2.113 3.56c.998 15.535-12.521 55.329-25.336 55.329-2.328 0-3.463-2.524-3.463-6.593 0-11.23 6.691-34.943 10.056-45.801.43-1.409.666-2.622.666-3.678 0-2.974-1.84-4.5-6.007-4.5-4.578 0-9.547 1.741-14.34 10.174-1.683-7.435-6.711-10.683-13.735-10.683-11.523 0-24.397 12.19-30.051 28.076-7.572 21.208-22.832 41.692-43.375 41.692-18.645 0-28.486-15.515-28.486-40.03 0-35.392 25.982-64.308 45.253-64.308 9.215 0 13.617 5.869 13.617 14.869 0 10.897-6.085 15.964-6.085 20.112 0 1.272 1.057 2.524 3.15 2.524 8.374 0 18.234-9.841 18.234-23.262s-10.897-23.243-30.168-23.243c-31.851 0-63.898 32.047-63.898 73.113 0 32.673 16.121 52.374 44 52.374 19.017 0 35.628-14.79 44.588-32.047 1.018 14.302 7.513 21.776 17.413 21.776 8.804 0 15.925-5.243 21.364-14.458 2.094 9.645 7.65 14.36 14.87 14.36 8.275 0 15.201-5.243 21.794-14.986-.097 7.65 1.644 14.85 8.276 14.85 3.13 0 6.867-.725 7.533-3.464 6.984-28.877 24.24-52.453 29.523-52.453 1.565 0 1.995 1.507 1.995 3.287 0 7.846-5.537 23.928-5.537 34.2 0 11.092 4.716 18.43 14.459 18.43 10.8 0 21.775-13.227 29.092-32.556 2.29 18.058 7.24 32.633 14.987 32.633 9.508 0 26.392-20.014 36.625-41.203 4.01.509 10.036.372 15.827-3.717-2.465 6.241-3.912 13.07-3.912 19.897 0 19.663 9.39 25.18 17.47 25.18 8.785 0 15.907-5.243 21.365-14.458 1.8 8.315 6.398 14.34 14.85 14.34 13.225 0 24.71-13.519 24.71-24.612 0-2.934-1.252-4.715-2.72-4.715m-274.51 18.547c-5.342 0-7.435-5.38-7.435-13.401 0-13.93 9.528-37.193 19.604-37.193 4.402 0 6.065 5.185 6.065 11.524 0 14.145-9.059 39.07-18.235 39.07zm182.948-41.574c-3.189-3.796-4.343-8.961-4.343-13.559 0-5.673 2.074-10.467 4.558-10.467s3.248 2.446 3.248 5.85c0 5.693-2.035 14.008-3.463 18.176m41.418 41.574c-5.34 0-7.434-6.182-7.434-13.401 0-13.441 9.528-37.193 19.682-37.193 4.402 0 5.967 5.146 5.967 11.524 0 14.145-8.902 39.07-18.215 39.07" fill="#fff" fill-rule="nonzero"/><defs><radialGradient id="a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="rotate(-49.416 2013.203 443.786)scale(1469.491)"><stop offset="0" stop-color="#6420ff"/><stop offset="1" stop-color="#6420ff" stop-opacity="0"/></radialGradient><radialGradient id="b" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="rotate(54.703 42.717 594.194)scale(1657.122)"><stop offset="0" stop-color="#00c4cc"/><stop offset="1" stop-color="#00c4cc" stop-opacity="0"/></radialGradient><radialGradient id="c" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1023 -1030 473.711 470.491 367 1684)"><stop offset="0" stop-color="#6420ff"/><stop offset="1" stop-color="#6420ff" stop-opacity="0"/></radialGradient><radialGradient id="d" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(595.999 1372 -2298.41 998.431 777 256)"><stop offset="0" stop-color="#00c4cc" stop-opacity=".73"/><stop offset="0" stop-color="#00c4cc"/><stop offset="1" stop-color="#00c4cc" stop-opacity="0"/></radialGradient></defs></svg></div>
+                    <div class="link-text">Canva</div>
+                </a>
+
+                <a href="https://icloud.com" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1c/ICloud_logo.svg" width="32" alt=""></div>
+                    <div class="link-text">iCloud</div>
+                </a>
+
+                <a href="https://commons.wikimedia.org" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Commons-logo.svg" width="30" alt=""></div>
+                    <div class="link-text">Wikimedia Commons</div>
+                </a>
+
+                <a href="https://svgviewer.dev" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 124 124" fill="none"><rect width="124" height="124" rx="24" fill="#f97316"/><path d="M19.375 36.782v63.843a4 4 0 0 0 4 4h63.843c3.564 0 5.348-4.309 2.829-6.828L26.203 33.953c-2.52-2.52-6.828-.735-6.828 2.829" fill="#fff"/><circle cx="63.211" cy="37.539" r="18.164" fill="#000"/><rect opacity=".4" x="81.133" y="80.72" width="17.569" height="17.388" rx="4" transform="rotate(-45 81.133 80.72)" fill="#fdba74"/></svg></div>
+                    <div class="link-text">SVGviewer</div>
+                </a>
+
+                <a href="https://fontsee.com/" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><svg xmlns="http://www.w3.org/2000/svg" width="2000" viewBox="0 0 1500 1500" height="2000" version="1.0"><defs><clipPath id="a"><path d="M0 0h560v1500H0z"/></clipPath><clipPath id="b"><path d="M0 0h674v1500H0z"/></clipPath></defs><g clip-path="url(#a)" transform="translate(45)"><path d="M544.854 426.65H278.026l-7.516 230.5h239.282l-13.78 132.797h-229.25l-1.267 41.328 15.047 325.719h-175.39l15.031-304.422-15.031-559.969h453.484Zm0 0" fill="#2aeb2a"/></g><g clip-path="url(#b)" transform="translate(770)"><path d="M309.801 1035.944q153.733 0 153.734-123-.001-64.06-67.906-94.797-35.878-17.936-92.89-33.312-57.002-15.373-94.798-31.39-37.798-16.016-76.234-44.204-75.58-56.372-75.578-173.594-.001-117.232 81.344-184.484 81.357-67.266 212.671-67.266 131.328.001 244.063 52.532V528.6l-130.672 8.971v-74.313q-.001-19.218-5.125-28.188c-9.398-16.226-39.508-24.344-90.328-24.344q-76.218 0-112.735 26.907-36.515 26.907-36.515 83.28c0 27.337 10.25 51.25 30.75 71.75q20.496 20.502 60.844 33.954 40.359 13.44 85.843 27.531 45.48 14.099 80.72 30.75 35.23 16.658 73.655 46.125 78.155 57.659 78.157 178.094 0 120.421-86.485 189.61-86.472 69.17-228.047 69.169-141.562.002-254.296-52.531V912.943l130.671-8.969v78.157q-.001 19.22 5.125 28.187 5.123 8.97 31.391 17.297c17.508 5.555 45.055 8.328 82.64 8.328m0 0" fill="#00d400"/></g></svg></div>
+                    <div class="link-text">Fontsee</div>
+                </a>
+
+                <a onclick="alert('Start de extensie op om Instellingen te openen.')" target="_blank" class="link-card" style="cursor: pointer;">
+                    <div class="link-icon" style="background: transparent;"><svg width="34" height="34" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.012 2.25c.734.008 1.465.093 2.182.253a.75.75 0 0 1 .582.649l.17 1.527a1.384 1.384 0 0 0 1.927 1.116l1.401-.615a.75.75 0 0 1 .85.174 9.8 9.8 0 0 1 2.204 3.792.75.75 0 0 1-.271.825l-1.242.916a1.38 1.38 0 0 0 0 2.226l1.243.915a.75.75 0 0 1 .272.826 9.8 9.8 0 0 1-2.204 3.792.75.75 0 0 1-.848.175l-1.407-.617a1.38 1.38 0 0 0-1.926 1.114l-.169 1.526a.75.75 0 0 1-.572.647 9.5 9.5 0 0 1-4.406 0 .75.75 0 0 1-.572-.647l-.168-1.524a1.382 1.382 0 0 0-1.926-1.11l-1.406.616a.75.75 0 0 1-.849-.175 9.8 9.8 0 0 1-2.204-3.796.75.75 0 0 1 .272-.826l1.243-.916a1.38 1.38 0 0 0 0-2.226l-1.243-.914a.75.75 0 0 1-.271-.826 9.8 9.8 0 0 1 2.204-3.792.75.75 0 0 1 .85-.174l1.4.615a1.387 1.387 0 0 0 1.93-1.118l.17-1.526a.75.75 0 0 1 .583-.65q1.075-.238 2.201-.252m0 1.5a9 9 0 0 0-1.354.117l-.109.977A2.886 2.886 0 0 1 6.525 7.17l-.898-.394a8.3 8.3 0 0 0-1.348 2.317l.798.587a2.88 2.88 0 0 1 0 4.643l-.799.588c.32.842.776 1.626 1.348 2.322l.905-.397a2.882 2.882 0 0 1 4.017 2.318l.11.984c.889.15 1.798.15 2.687 0l.11-.984a2.88 2.88 0 0 1 4.018-2.322l.905.396a8.3 8.3 0 0 0 1.347-2.318l-.798-.588a2.88 2.88 0 0 1 0-4.643l.796-.587a8.3 8.3 0 0 0-1.348-2.317l-.896.393a2.884 2.884 0 0 1-4.023-2.324l-.11-.976a9 9 0 0 0-1.333-.117ZM12 8.25a3.75 3.75 0 1 1 0 7.5 3.75 3.75 0 0 1 0-7.5m0 1.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5" fill="#fff"/></svg></div>
+                    <div class="link-text">Edge Settings</div>
+                </a>
+
+                <a href="https://nl.wikipedia.org/wiki/Lijst_van_bestandsextensies" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Wikipedia_W_-_SuperTinyIcons.svg" width="32" alt=""></div>
+                    <div class="link-text">Lijst BE</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">School</h2>
+            <div class="links-grid">
+
+                <a href="https://gomarus.sharepoint.com/sites/Leerlingenportaal" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/2/28/Microsoft_Office_SharePoint_%282025%E2%80%93present%29.svg" width="32" alt=""></div>
+                    <div class="link-text">Leerlingenportaal</div>
+                </a>
+
+                <a href="https://outlook.office.com/owa/?realm=gomarus.nl" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Microsoft_Outlook_Icon_%282025%E2%80%93present%29.svg" width="32" alt=""></div>
+                    <div class="link-text">Outlook</div>
+                </a>
+
+                <a href="https://gomarus-my.sharepoint.com/" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Microsoft_OneDrive_Icon_%282025_-_present%29.svg" width="32" alt=""></div>
+                    <div class="link-text">OneDrive</div>
+                </a>
+
+                <a href="https://somtoday.nl/azure/gomarus.nl" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><svg width="33" height="35" viewBox="0 0 33 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M29.865 12.413h-.98c-1.134 0-2.048-.89-2.048-1.994V8.503c0-1.103-.915-1.993-2.048-1.993H21.21c-1.134 0-2.048-.89-2.048-1.994V1.994C19.163.89 18.249 0 17.115 0h-3.412c-1.133 0-2.048.89-2.048 1.994v2.522c0 1.103-.914 1.994-2.047 1.994H6.029c-1.133 0-2.047.89-2.047 1.993v1.916c0 1.104-.915 1.994-2.048 1.994h-.98c-1.134 0-2.048.89-2.048 1.994v5.954c0 1.103.914 1.994 2.047 1.994h.968c1.133 0 2.047.89 2.047 1.993v2.207c0 1.103.915 1.993 2.048 1.993s2.048.89 2.048 1.994v2.465c0 1.103.914 1.993 2.047 1.993h2.2c1.133 0 2.048-.89 2.048-1.993v-3.433c0-.568.47-1.02 1.047-1.02.576 0 1.047.459 1.047 1.02v3.432c0 1.104.914 1.994 2.047 1.994h2.2c1.133 0 2.048-.89 2.048-1.993v-2.465c0-1.103.914-1.994 2.048-1.994s2.047-.89 2.047-1.993v-2.207c0-1.103.915-1.993 2.048-1.993h.967c1.133 0 2.048-.89 2.048-1.994v-5.954c0-1.104-.915-1.994-2.048-1.994zM25 18.89c-.643 2.065-2.074 3.762-4.029 4.781a8.46 8.46 0 0 1-6.322.6.88.88 0 0 1-.61-1.103.92.92 0 0 1 1.14-.594 6.6 6.6 0 0 0 4.937-.47c1.524-.794 2.644-2.117 3.148-3.73.146-.47.656-.729 1.14-.593a.886.886 0 0 1 .61 1.11z" fill="#005eb8"/></svg></div>
+                    <div class="link-text">Somtoday</div>
+                </a>
+
+                <a href="https://gomarus.zportal.nl/?sso=true" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="35" height="35" viewBox="0 0 233.096 211.81"><defs><clipPath clipPathUnits="userSpaceOnUse" id="a"><path d="M0 841.89h595.275V0H0Z"/></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.25 0 0 -1.25 -292.453 631.918)"><g transform="translate(271.703 369.252)"/><g transform="translate(377.28 364.26)"/><path d="M0 0c-8.962 9.065-21.415 14.688-35.175 14.688S-61.381 9.065-70.349 0Z" style="fill:#ef2f2c;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(387.828 480.257)scale(1.71286)"/><path d="M0 0c8.879-8.477 20.903-13.689 34.149-13.689 13.25 0 25.269 5.212 34.152 13.689z" style="fill:#ce0f3e;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(269.086 359.562)scale(1.71286)"/><path d="M0 0h-3.62c0-31.814-16.247-52.841-49.642-64.266l1.366-3.906H-8.36a49.4 49.4 0 0 1 3.63 18.616c0 5.719-.982 11.208-2.766 16.317C-2.522-23.698 0-12.569 0 0" style="fill:#ce0f3e;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(420.44 505.536)scale(1.71286)"/><path d="M0 0c-13.627-5.009-24.166-12.051-31.352-20.967-8.173-10.138-12.317-23.047-12.317-38.369h2.892c0 27.725 13.635 46.259 41.642 56.573z" style="fill:#ce0f3e;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(322.118 437.722)scale(1.71286)"/><path d="M0 0h-40.655A49.3 49.3 0 0 1-43.9-17.623c0-5.484.909-10.753 2.557-15.68-5.13-9.643-7.728-20.924-7.728-33.691h3.618c0 30.843 15.278 51.553 46.641 63.196z" style="fill:#ef2f2c;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(318.014 450.839)scale(1.71286)"/><path d="M0 0c0-28.769-14.672-47.646-44.854-57.704l.952-2.733c15.148 5.054 26.75 12.477 34.48 22.066C-1.247-28.229 2.896-15.32 2.896 0Z" style="fill:#ef2f2c;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(402.124 505.536)scale(1.71286)"/></g></svg></div>
+                    <div class="link-text">Zermelo</div>
+                </a>
+
+                <a href="https://gomarus.nl" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><svg xmlns="http://www.w3.org/2000/svg" width="375" viewBox="0 0 375 375" height="375" version="1.0"><path fill="#78cbdc" d="M183.617 25.082c.805.086 45.153 28.617 49.637 31.758l-.008 63.691-49.543-31.847c-3.055 2.164-6.266 4.125-9.414 6.144l-15.762 10.125-16.039 10.32c-2.691 1.735-5.363 3.586-8.12 5.2l-36.774 23.672c-2.27 1.46-11.367 6.87-12.446 8.156l-.25.195c-.214-7.309-.027-14.672-.027-21.988l-.008-41.942Zm0 0"/><path fill="#ade0e9" d="M183.617 25.082c.805.086 45.153 28.617 49.637 31.758l-.008 63.691-49.543-31.847c-3.055 2.164-6.266 4.125-9.414 6.144l-15.762 10.125-16.039 10.32c-2.691 1.735-5.363 3.586-8.12 5.2-.138-7.293-.048-14.602-.048-21.899l-.007-41.699c16.484 10.617 33.093 21.07 49.46 31.855V41.496c0-2.644.325-15.035-.156-16.414"/><path fill="#5273a9" d="m232.926 247.453.183.059c1.868.87 3.618 2.164 5.356 3.285l9.238 5.965c11.625 7.48 23.176 15.136 34.918 22.437-.691 1.043-12.305 8.13-14.223 9.363l-56.652 36.43-18.512 11.91c-3.164 2.036-6.324 4.293-9.597 6.125l-.008-63.511c-4.621 2.972-48.547 31.527-49.356 31.566.247-14.785.02-29.625.016-44.426l-.004-11.777c-.004-2.461-.09-4.945.09-7.402 11.762 7.273 23.297 14.96 34.926 22.441a776 776 0 0 1 9.156 5.887c1.746 1.132 3.54 2.476 5.395 3.41 11.535-7.8 23.445-15.149 35.164-22.676l8.879-5.684c1.664-1.062 3.558-2.09 5.03-3.402"/><path fill="#8f9dc3" d="m232.926 247.453.183.059c.461 6.89.106 14.742.106 21.715l.012 41.914c-11.57-7.875-23.579-15.215-35.348-22.801l-8.594-5.52c-1.816-1.164-3.73-2.285-5.433-3.605 11.535-7.8 23.445-15.149 35.164-22.676l8.879-5.68c1.664-1.066 3.558-2.093 5.03-3.406"/><path fill="#78cbdc" d="M84.867 279.309c-.383-1.614-.101-3.926-.097-5.61v-13.137l.007-55.828-.004-38.101c0-2.836-.332-12.094.125-14.137l.25-.195 31.641 20.328 11.55 7.422c2.036 1.308 4.157 2.558 6.114 3.976-.36 5.02-.02 10.977-.02 16.082l-.015 32.973.016 9.277c0 1.68.097 3.45-.059 5.118-.18 2.457-.094 4.941-.09 7.402l.004 11.777c.004 14.801.23 29.64-.016 44.426-2.101-1.195-4.117-2.621-6.152-3.926l-11.992-7.71c-10.422-6.7-20.926-13.305-31.262-20.137"/><path fill="#12acba" d="M84.926 215.785c3.937 2.266 7.734 4.93 11.558 7.39l24.454 15.735c4.457 2.867 8.867 5.895 13.437 8.567-.18 2.457-.094 4.941-.09 7.402l.004 11.777c.004 14.801.23 29.64-.016 44.426-2.101-1.195-4.117-2.621-6.152-3.926l-11.992-7.71c-10.422-6.7-20.926-13.305-31.262-20.137.281-2.188.098-4.594.094-6.817l-.016-13.195Zm.222-63.484 31.641 20.328 11.55 7.422c2.036 1.308 4.157 2.558 6.114 3.976-2.023 1.02-3.95 2.43-5.86 3.66l-10.105 6.497-33.535 21.562c-.164-14.625-.004-29.27 0-43.894.004-6.418.274-12.954-.055-19.356Zm0 0"/><path fill="#51427d" d="M233.023 183.992c.125-.004.258-.054.372-.012.992.36 2.27 1.477 3.187 2.07l9.52 6.122 23.793 15.3c4.238 2.727 8.605 5.352 12.726 8.255l-.027 38.234c.004 8.406-.114 16.832.027 25.238-11.742-7.3-23.293-14.957-34.918-22.437l-9.238-5.965c-1.738-1.121-3.488-2.414-5.356-3.285l-.183-.059c-7.43-4.433-14.633-9.367-21.914-14.047-9.133-5.875-18.403-11.597-27.403-17.668l31.688-20.383c5.902-3.789 11.738-7.718 17.726-11.363"/><path fill="#8979a1" d="M233.023 183.992c.125-.004.258-.054.372-.012.992.36 2.27 1.477 3.187 2.07l9.52 6.122 23.793 15.3c4.238 2.727 8.605 5.352 12.726 8.255-1.61.808-3.152 1.964-4.672 2.941l-9.066 5.836-22.695 14.594c-4.34 2.793-8.653 5.695-13.079 8.355.164-5.172.254-62.785-.086-63.46"/></svg></div>
+                    <div class="link-text">Gomarus</div>
+                </a>
+            </div>
+        </div>
+
+        <!--Overige links -->
+        <div class="category">
+            <h2 class="category-title">Overige</h2>
+            <div class="links-grid">
+
+                <a href="https://github.com" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent; color:white;"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 1024 1024" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" transform="scale(64)" fill="#fff"/></svg></div>
+                    <div class="link-text">GitHub</div>
+                </a>
+
+                <a href="https://fonts.google.com" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/4/40/Google_Fonts_icon.svg" width="32" alt=""></div>
+                    <div class="link-text">Google Fonts</div>
+                </a>
+
+                <a href="https://marktplaats.nl" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 984.8 980.2" width="32"><g fill-rule="evenodd" fill="none"><path fill="#eda566" d="M492.4 0c272 0 492.4 219.4 492.4 490.1 0 270.6-220.5 490.1-492.4 490.1S0 760.8 0 490.1 220.5 0 492.4 0"/><path fill="#2d3c4d" d="M658.3 374.2 457.8 179.7c-37.1 36-37.1 94.5 0 130.5L591 439.5 390.5 634c37.1 36.1 97.4 36.1 134.5 0l133.2-129.3c37.2-36 37.2-94.4.1-130.5m-71.6 413.2c52.1 0 94.4-41.4 94.4-92.4H399.7c-52.1 0-94.4 41.4-94.4 92.4z"/></g></svg></div>
+                    <div class="link-text">Marktplaats</div>
+                </a>
+                
+                <a href="https://bol.com" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Logo_of_Bol_%282025%29.svg" width="37" alt=""></div>
+                    <div class="link-text">Bol.com</div>
+                </a>
+
+                <a href="https://bankieren.rabobank.nl/welcome" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="https://cdn.brandfetch.io/idlpdjDRFq/theme/dark/symbol.svg?c=1idqRRCzvUEP4EPx1HR" width="32" alt=""></div>
+                    <div class="link-text">Rabobank</div>
+                </a>
+
+                <a href="https://mnsmi.me" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 375 375"><path fill="#0181ca" fill-rule="evenodd" d="m21.98 375.063 342.258-9.477L344.09.027l-333.332 37.5ZM62.523 78.125s2.418 149.871-8.132 221.992h65.035s20.324-98.004 45.734-98.004-6.097 98.004-6.097 98.004h56.906s24.39-98.84 44.715-98.84c20.32 0-5.079 98.84-5.079 98.84h60.973S340 76.648 273.902 76.648c-39.636 0-58.96 33.66-58.96 63.707h-4.044s3.09-65.375-35.566-65.375c-38.652 0-53.86 57.86-53.86 82.903v27.535h-8.132V78.125Z"/></svg></div>
+                    <div class="link-text">mnsmi.me</div>
+                </a>
+
+                <a href="https://music.youtube.com" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 176"  height="32" width="32" xml:space="preserve"><circle fill="red" cx="88" cy="88" r="88"/><path fill="#fff" d="M88 46c23.1 0 42 18.8 42 42s-18.8 42-42 42-42-18.8-42-42 18.9-42 42-42m0-4c-25.4 0-46 20.6-46 46s20.6 46 46 46 46-20.6 46-46-20.6-46-46-46"/><path fill="#fff" d="m72 111 39-24-39-22z"/></svg></div>
+                    <div class="link-text">YouTube Music</div>
+                </a>
+            </div>
+
+            <!--
+            <a href="https://link" target="_blank" class="link-card">
+                    <div class="link-icon" style="background: transparent;"><img src="link" width="32" alt=""></div>
+                    <div class="link-text">link</div>
+                </a>
+            -->
+        </div>
+        </div>
+
+    </div>
+
+    <footer>
+        Persoonlijk Dashboard
+    </footer>
+    <script>
+function logout(){
+
+    localStorage.removeItem("enterprise_session");
+
+    window.location.href = "login.html";
+
+}
+</script>
+</body>
+</html>
