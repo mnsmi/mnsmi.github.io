@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETPStudio | Life Is Emmer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu">
+
+<style>
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Ubuntu', Arial, Helvetica, Roboto sans-serif;
+    background: linear-gradient(160deg, #0f172a, #1e293b);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.player {
+    width: 90%;
+    max-width: 420px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 22px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    padding: 20px;
+    text-align: center;
+}
+
+.cover {
+    width: 100%;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+h2 {
+    margin: 15px 0 5px;
+    font-size: 20px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+button {
+    background: #0a84ff;
+    border: none;
+    color: white;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+}
+
+.repeat-active {
+    background: #22c55e;
+}
+
+.progress {
+    width: 100%;
+    margin-top: 15px;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+.time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 5px;
+}
+
+.error {
+    text-align: center;
+    color: red;
+    font-size: 18px;
+    padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="unsupported" class="error" style="display:none;">
+    Deze pagina is niet geschikt voor jouw apparaat.
+</div>
+
+<div id="player" class="player fade-in" style="display:none;">
+    <img src="https://storage.googleapis.com/routenote-release-cloudfiles/5064030943343/FcASJt5nWd_1781197356.jpg" alt="Album Cover" class="cover">
+
+    <h2>Life Is Emmer</h2>
+
+    <audio id="audio" src="https://safenote.co/download/5badaa45598bd7059e39e932d3d3ae02/fH7SIIZzcoduN3X4wUq9XUhA2ojI19wGtw7qwvOQ.mp3" preload="metadata"></audio>
+
+    <div class="progress">
+        <input type="range" id="seek" value="0">
+
+        <div class="time">
+            <span id="current">0:00</span>
+            <span id="duration">0:00</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="toggleRepeat()" id="repeatBtn">🔁</button>
+        <button onclick="togglePlay()" id="playBtn">▶</button>
+    </div>
+    <p>© MS</p>
+</div>
+
+<script>
+function isAllowedDevice() {
+    const ua = navigator.userAgent;
+    return /iPhone|iPad|Macintosh|Windows/i.test(ua);
+}
+
+const playerDiv = document.getElementById("player");
+const errorDiv = document.getElementById("unsupported");
+
+if (!isAllowedDevice()) {
+    errorDiv.style.display = "block";
+} else {
+    playerDiv.style.display = "block";
+}
+
+const audio = document.getElementById("audio");
+const btn = document.getElementById("playBtn");
+const repeatBtn = document.getElementById("repeatBtn");
+const seek = document.getElementById("seek");
+const currentEl = document.getElementById("current");
+const durationEl = document.getElementById("duration");
+
+let repeat = false;
+
+function formatTime(t) {
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+}
+
+function togglePlay() {
+    if (audio.paused) {
+        audio.play();
+        btn.textContent = "⏸";
+        playerDiv.classList.add("playing");
+
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: "Mijn Nummer",
+                artist: "Artiest",
+                artwork: [{
+                    src: "cover.jpg",
+                    sizes: "512x512",
+                    type: "image/jpeg"
+                }]
+            });
+        }
+
+    } else {
+        audio.pause();
+        btn.textContent = "▶";
+        playerDiv.classList.remove("playing");
+    }
+}
+
+function toggleRepeat() {
+    repeat = !repeat;
+    audio.loop = repeat;
+    repeatBtn.classList.toggle("repeat-active");
+}
+
+audio.addEventListener("loadedmetadata", () => {
+    durationEl.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener("timeupdate", () => {
+    seek.max = audio.duration || 0;
+    seek.value = audio.currentTime;
+    currentEl.textContent = formatTime(audio.currentTime);
+});
+
+seek.addEventListener("input", () => {
+    audio.currentTime = seek.value;
+});
+</script>
+
+</body>
+</html>
