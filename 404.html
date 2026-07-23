@@ -1,27 +1,191 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 | Pagina niet gevonden</title>
-    <link rel="icon' href="favicon.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu">
-    <style>
-        body {
-            font-family: 'Ubuntu';
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            text-align: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 | Pagina niet gevonden | mnsmi.me</title>
+<link rel="icon" href="img/icon.svg">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Ubuntu","Inter","Segoe UI",sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+    radial-gradient(circle at top left,#1d4ed822,transparent 30%),
+    radial-gradient(circle at bottom right,#06b6d422,transparent 35%),
+    #0f172a;
+    color:white;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:32px 32px;
+    pointer-events:none;
+}
+
+.topbar{
+    height:74px;
+    display:flex;
+    align-items:center;
+    padding:0 40px;
+    background:rgba(15,23,42,.65);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-left: 40px;
+}
+
+.logo{
+    width:42px;
+}
+
+.brand h2{
+    font-size:21px;
+    font-weight:600;
+}
+
+.brand span{
+    color:#94a3b8;
+    font-size:13px;
+}
+
+main{
+    min-height:calc(100vh - 74px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:30px;
+}
+
+.error-container{
+    max-width:700px;
+}
+
+.error-code{
+    font-size:150px;
+    font-weight:700;
+    line-height:1;
+    background:linear-gradient(135deg,#0181ca,#0087d4fb);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom: 30px;
+}
+
+.error-container h1{
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.error-container p{
+    color:#94a3b8;
+    font-size:18px;
+    line-height:1.8;
+    margin-bottom:35px;
+}
+
+.actions{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    height:54px;
+    padding:0 24px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:600;
+    transition:.25s;
+}
+
+.btn-primary{
+    color:white;
+    background:linear-gradient(90deg,#0f1c38,#132138);
+}
+
+.btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(37,99,235,.35);
+}
+
+.btn-secondary{
+    border:1px solid #334155;
+    color:#cbd5e1;
+    background:#172033;
+}
+
+.btn-secondary:hover{
+    border-color:#3b82f6;
+}
+
+@media(max-width:768px){
+
+    .error-code{
+        font-size:110px;
+    }
+
+    .error-container h1{
+        font-size:32px;
+    }
+
+    .error-container p{
+        font-size:16px;
+    }
+}
+</style>
 </head>
 <body>
-    <h1>404 | Pagina niet gevonden</h1>
-    <p>Deze pagina bestaat niet.</p>
-    <a href="https://mnsmi.me/"><h3>Terug naar Home</h3></a> 
+
+<header class="topbar">
+    <div class="brand">
+        <img class="logo" src="icon.svg">
+        <div>
+            <h2>mnsmi.me</h2>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="error-container">
+       
+
+        <h1>Pagina niet gevonden</h1>
+
+        <p>
+            De pagina die je probeert te bezoeken bestaat niet,
+            is verplaatst of is tijdelijk niet beschikbaar.
+        </p>
+
+        <div class="actions">
+            <a href="https://mnsmi.me" class="btn btn-primary">
+                Terug naar Home
+            </a>
+            <a href="mailto:hello@mnsmi.me" class="btn btn-secondary">
+                Contact opnemen
+            </a>
+        </div>
+    </div>
+</main>
+
 </body>
 </html>

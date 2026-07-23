@@ -118,7 +118,7 @@ footer {
 
 .little {
     color: #94a3b8;
-    font-size: x-small;
+    font-size: small;
     text-decoration: none;
     margin-top: -30px;
 }
@@ -137,6 +137,21 @@ footer {
     font-size: x-small;
     text-decoration: none;
     margin-top: -30px;
+}
+
+.footertext {
+    margin-top: -20px;
+    color: #94a3b8;
+    font-size: xx-small;
+}
+
+.ghlink {
+    color: #94a3b8;
+    text-decoration: none;
+}
+
+.ghlink:hover {
+    text-decoration: underline;
 }
 
 
